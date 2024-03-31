@@ -1,0 +1,153 @@
+<!-- Zadanie polega na zaprojektowaniu strony głównej dla aplikacji do zarządzania
+     magazynem i księgowością oraz podstrony "Historia".
+
+1.Strona główna powinna zawierać następujące elementy:
+
+index.html
+
+Wyświetlanie aktualnego stanu magazynowego i aktualnego salda.
+Trzy formularze:
+a. Formularz do zakupu: z polami: nazwa produktu, cena jednostkowa, liczba sztuk.
+b. Formularz do sprzedaży: z polami: nazwa produktu, cena jednostkowa, liczba sztuk.
+c. Formularz zmiany salda: z polami: komentarz, wartość (tylko liczbowa).
+
+ELEMENTY DAC NA SZTYWNO
+
+2.Podstrona "Historia" 
+
+history.html
+
+Podstrona powinna być dostępna pod adresem "/historia/" i "/historia/<line_from>/<line_to>/"
+Jeśli nie podano parametrów, powinna wyświetlać całą historię.
+Jeśli podano parametry, powinna wyświetlać dane z danego zakresu.
+
+ELEMENTY DAC NA SZTYWNO
+
+3.CSS
+
+Zapewnij przyjazny dla użytkownika interfejs, stosując style CSS. -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WMS - Magazyn i Księgowość</title>
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+        <style>
+            #buy_form {
+                width: 33%;
+                padding: 0.33%;
+                float: left;
+            }
+
+            #sell_form {
+                width: 33%;
+                padding: 0.33%;
+                float: left;
+            }
+
+            #balance_form {
+                width: 33%;
+                padding: 0.34%;
+                float: left;
+            }
+
+            #forms_parent:after {
+                content: '';
+                display: block;
+                clear: both;
+                padding-top: 20px;
+            }
+
+            #forms {
+                padding-left: 20%;
+                padding-right: 20%;
+                padding-top: 20px;
+            }
+
+            #warehouse {
+                padding-left: 20%;
+                padding-right: 20%;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+
+            #balance {
+                padding-left: 20%;
+                padding-right: 20%;
+                padding-top: 20px;
+                padding-bottom: 20px;
+             
+            }
+        </style>
+    </head>
+    <body>
+        <header class="navbar">
+            <section class="navbar-section">
+              <a href="http://127.0.0.1:5000/" class="navbar-brand mr-2">Strona Główna</a>
+              <!-- <a href="..." class="btn btn-link">Magazyn i Księgowość</a> -->
+              <a href="http://127.0.0.1:5000/history" class="btn btn-link">Historia</a>
+            </section>
+            <section class="navbar-section">
+              <div class="input-group input-inline">
+                <input class="form-input" type="text" placeholder="czego szukasz?">
+                <button class="btn btn-primary input-group-btn">Szukaj</button>
+              </div>
+            </section>
+        </header>
+
+        <div id="warehouse">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Nazwa Produktu</th>
+                        <th>Stan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in availability.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+
+        <div id="forms_parent">
+            <div id="forms">
+                <form id="buy_form" action="add_product" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="input-example-1">Zakup</label>
+                        <input class="form-input" type="text" id="input-example-1" name="product_name" placeholder="Nazwa Produktu" required>
+                        <input class="form-input" type="number" id="input-example-1" name="buy_price" placeholder="Cena jednostkowa" required>
+                        <input class="form-input" type="number" id="input-example-1" name="units" placeholder="Liczba sztuk" required>
+                        <button class="btn-sm">Wprowadź zakup</button>
+                    </div>
+                </form>    
+                <form id="sell_form" action="sell_product" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="input-example-1">Sprzedaż</label>
+                        <input class="form-input" type="text" id="input-example-1" name="product_name" placeholder="Nazwa Produktu" required>
+                        <input class="form-input" type="number" id="input-example-1" name="sell_price" placeholder="Cena jednostkowa" required>
+                        <input class="form-input" type="number" id="input-example-1" name="units" placeholder="Liczba sztuk" required>
+                        <button class="btn-sm">Wprowadź sprzedaż</button>
+                    </div>
+                </form>
+                <form id="balance_form" action="balance_update" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="input-example-1">Saldo</label>
+                        <input class="form-input" type="number" id="input-example-1" name="balance_update" placeholder="Wartość" required>
+                        <button class="btn-sm">Wprowadź saldo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="balance">
+            <div class="empty">
+                <p class="empty-title h2">{{ account }}</p>
+                <p class="empty-subtitle">Stan konta</p>
+            </div>
+        </div>       
+    </body>
+</html>
